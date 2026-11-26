@@ -16,31 +16,35 @@ function pad(number) {
 // ---------- Cupos ----------
 
 export function spotsLeft(event) {
-  return event.capacity - event.registered;
+  // Evita devolver números negativos si registered > capacity
+  return Math.max(0, event.capacity - event.registered);
 }
 
 export function isFull(event) {
-  return spotsLeft(event) === 0;
+  // Bloquea tanto en 0 como si hubiera sobrecupo
+  return event.capacity - event.registered <= 0;
 }
 
 export function spotsLabel(event) {
   if (isFull(event)) {
     return 'Cupo lleno';
   }
-  return `${spotsLeft(event)} lugares`;
+  const left = spotsLeft(event);
+  return left === 1 ? '1 lugar' : `${left} lugares`;
 }
 
 // ---------- Precio ----------
 
 export function formatPrice(price) {
-  return `$${price}`;
+  return price === 0 ? 'Gratis' : `$${price}`;
 }
 
 // ---------- Fechas ----------
 
 export function formatShortDate(dateStr) {
   const date = toDate(dateStr);
-  return `${pad(date.getDate())}/${pad(date.getMonth())}`;
+  // getMonth() es base 0, se suma 1 para obtener el mes real
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
 }
 
 export function weekdayName(dateStr) {
@@ -53,6 +57,9 @@ export function daysUntil(dateStr, todayStr) {
 
 export function countdownLabel(dateStr, todayStr) {
   const days = daysUntil(dateStr, todayStr);
+  if (days < 0) {
+    return 'Finalizado';
+  }
   if (days === 0) {
     return 'Hoy';
   }
@@ -63,9 +70,8 @@ export function countdownLabel(dateStr, todayStr) {
 }
 
 export function sortByDate(events) {
-  return [...events].sort((a, b) =>
-    formatShortDate(a.date).localeCompare(formatShortDate(b.date)),
-  );
+  // Compara directamente el formato YYYY-MM-DD para respetar año, mes y día
+  return [...events].sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // ---------- Búsqueda y filtros ----------
