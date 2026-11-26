@@ -43,7 +43,6 @@ export function formatPrice(price) {
 
 export function formatShortDate(dateStr) {
   const date = toDate(dateStr);
-  // getMonth() es base 0, se suma 1 para obtener el mes real
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
 }
 
