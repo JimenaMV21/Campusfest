@@ -14,7 +14,7 @@
   --surface: #ffffff;
   --ink: #15161a;
   --ink-soft: #3d3e45;
-  --text-muted: #aba69d;
+  --text-muted: #0a62b8;
   --rule: #dadee5;
   --on-dark: #ffffff;
   --on-dark-soft: #c9cad1;
@@ -171,8 +171,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   gap: 4px;
   margin: 0;
   font-size: var(--text-sm);
-  color: var(--line-conferencias); /* Azul fuerte #0a62b8 */
-}.meta span { display: flex; align-items: center; gap: 6px; }
+  color: var(--text-muted);
+}
+.meta span { display: flex; align-items: center; gap: 6px; }
 .meta svg { width: 16px; height: 16px; }
 .event-foot {
   display: grid;
