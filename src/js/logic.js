@@ -13,15 +13,20 @@ function pad(number) {
   return String(number).padStart(2, '0');
 }
 
+function normalizeText(str) {
+  return String(str ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
 // ---------- Cupos ----------
 
 export function spotsLeft(event) {
-  // Evita devolver números negativos si registered > capacity
   return Math.max(0, event.capacity - event.registered);
 }
 
 export function isFull(event) {
-  // Bloquea tanto en 0 como si hubiera sobrecupo
   return event.capacity - event.registered <= 0;
 }
 
@@ -69,15 +74,14 @@ export function countdownLabel(dateStr, todayStr) {
 }
 
 export function sortByDate(events) {
-  // Compara directamente el formato YYYY-MM-DD para respetar año, mes y día
   return [...events].sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // ---------- Búsqueda y filtros ----------
 
 export function matchesSearch(event, query) {
-  const text = `${event.title} ${event.venue} ${event.categoryLabel}`.toLowerCase();
-  return text.includes(query.trim().toLowerCase());
+  const text = normalizeText(`${event.title} ${event.venue} ${event.categoryLabel}`);
+  return text.includes(normalizeText(query).trim());
 }
 
 export function filterEvents(events, { query = '', category = 'todas', day = null, onlyMine = false, mine = [] } = {}) {
@@ -88,16 +92,4 @@ export function filterEvents(events, { query = '', category = 'todas', day = nul
     if (query && !matchesSearch(event, query)) return false;
     return true;
   });
-}
-
-function normalizeText(str) {
-  return str
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-}
-
-export function matchesSearch(event, query) {
-  const text = normalizeText(`${event.title} ${event.venue} ${event.categoryLabel}`);
-  return text.includes(normalizeText(query.trim()));
 }
