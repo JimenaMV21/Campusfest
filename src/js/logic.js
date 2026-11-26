@@ -90,3 +90,15 @@ export function filterEvents(events, { query = '', category = 'todas', day = nul
     return true;
   });
 }
+
+function normalizeText(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+export function matchesSearch(event, query) {
+  const text = normalizeText(`${event.title} ${event.venue} ${event.categoryLabel}`);
+  return text.includes(normalizeText(query.trim()));
+}
